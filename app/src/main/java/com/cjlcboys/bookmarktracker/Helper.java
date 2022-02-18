@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-class Helper{
+public class Helper{
     public static final String BOOKMARKS_FILE_NAME="com.cjlcboys.bookmarktracker.bookmarks.json";
 
     public static void load_bookmarks(List<Bookmark> bookmarks, File file) throws IOException, JSONException, ParseException {
