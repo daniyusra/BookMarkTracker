@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cjlcboys.bookmarktracker.databinding.ActivityMainBinding;
 import com.cjlcboys.bookmarktracker.Helper;
+import com.cjlcboys.bookmarktracker.timeservice.TimerService;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Bookmark> bookmarks;
     private RecyclerView rvBookmarks;
     public BookmarksAdapter adapter;
+    private boolean startedService=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         bookmarks = new ArrayList<>();
 
-        adapter = new BookmarksAdapter(bookmarks);
+        adapter = new BookmarksAdapter(bookmarks,this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvBookmarks);
         //Checking the availability state of the External Storage.
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -186,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             bookmarks.remove(viewHolder.getAdapterPosition());
             adapter.notifyDataSetChanged();
         }
+
     };
 
 
@@ -282,5 +285,22 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(this.startedService){
+            Intent intent = new Intent(getApplicationContext(),TimerService.class);
+            stopService(intent);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent intent_service = new Intent(getApplicationContext(), TimerService.class);
+        this.startedService = true;
+        startService(intent_service);
     }
 }

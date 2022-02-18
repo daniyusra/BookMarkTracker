@@ -37,7 +37,7 @@ public class FirstFragment extends Fragment {
         //bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
         //bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
 
-        BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
+        BookmarksAdapter adapter = new BookmarksAdapter(bookmarks, getActivity());
         // Attach the adapter to the recyclerview to populate items
         rvBookmarks.setAdapter(adapter);
         // Set layout manager to position the items

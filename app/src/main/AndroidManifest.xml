@@ -30,6 +30,9 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+        <service android:name=".timeservice.TimerService"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
     </application>
 
 </manifest>
