@@ -15,7 +15,7 @@ public class Bookmark {
     private static final String JSON_OBJECT_ENDTIME_HOLDER="JSON_OBJECT_ENDTIME_HOLDER";
 
     private static final SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm:ss");
-    private static final calendar = Calendar.getInstance();
+    private static final Calendar calendar = Calendar.getInstance();
 
     public String id;
     private String title;
