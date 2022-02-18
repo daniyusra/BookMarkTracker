@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         //      .setAction("Action", null).show();
-                        bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString()));
+                        bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),new Date(),new Date()));
                         dialog.dismiss();
                     }
                 });
@@ -100,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
         bookmarks = new ArrayList<>();
 
-        bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
-        bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
+        bookmarks.add(new Bookmark("BRUH","BRUH.COM",new Date(),new Date()));
+        bookmarks.add(new Bookmark("BRUH2","BRUH.COM",new Date(),new Date()));
 
         BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
         // Attach the adapter to the recyclerview to populate items

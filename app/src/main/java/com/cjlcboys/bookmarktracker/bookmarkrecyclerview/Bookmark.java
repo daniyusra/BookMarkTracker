@@ -1,7 +1,10 @@
 package com.cjlcboys.bookmarktracker.bookmarkrecyclerview;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,7 +51,7 @@ public class Bookmark {
         this.endTime = endtime;
     }
 
-    public Bookmark(JSONObject job){
+    public Bookmark(JSONObject job) throws JSONException, ParseException {
         if(job.has(JSON_OBJECT_UUID_HOLDER))
             this.id = job.getString(JSON_OBJECT_UUID_HOLDER);
         if(job.has(JSON_OBJECT_LINK_HOLDER))
@@ -95,7 +98,7 @@ public class Bookmark {
         this.desc = desc;
     }
 
-    public JSONObject getJSONObject(){
+    public JSONObject getJSONObject() throws JSONException {
         JSONObject job = new JSONObject();
         job.put(JSON_OBJECT_UUID_HOLDER, this.id);
         job.put(JSON_OBJECT_LINK_HOLDER, this.url);
