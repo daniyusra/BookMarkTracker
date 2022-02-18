@@ -62,8 +62,13 @@ public class Bookmark {
             this.desc = job.getString(JSON_OBJECT_DESCRIPTION_HOLDER);
         if(job.has(JSON_OBJECT_UPLOADTIME_HOLDER))
             this.uploadTime = simpleDateFormat.parse(job.getString(JSON_OBJECT_UPLOADTIME_HOLDER));
-        if(job.has(JSON_OBJECT_ENDTIME_HOLDER))
-            this.endTime = simpleDateFormat.parse(job.getString(JSON_OBJECT_ENDTIME_HOLDER));
+        if(job.has(JSON_OBJECT_ENDTIME_HOLDER)) {
+            String tmp_date = job.getString(JSON_OBJECT_ENDTIME_HOLDER);
+            if (tmp_date.equals(""))
+                this.endTime = null;
+            else
+                this.endTime = simpleDateFormat.parse(tmp_date);
+        }
     }
 
     //GETTERS
@@ -80,8 +85,11 @@ public class Bookmark {
         return this.desc;
     }
 
-    public String getUploadTime(){
-        return this.uploadTime.toString();
+    public Date getUploadTime(){
+        return this.uploadTime;
+    }
+    public Date getEndTime(){
+        return this.endTime;
     }
 
     //SETTERS
@@ -105,7 +113,10 @@ public class Bookmark {
         job.put(JSON_OBJECT_TITLE_HOLDER, this.title);
         job.put(JSON_OBJECT_DESCRIPTION_HOLDER, this.desc);
         job.put(JSON_OBJECT_UPLOADTIME_HOLDER, simpleDateFormat.format(this.uploadTime));
-        job.put(JSON_OBJECT_ENDTIME_HOLDER, simpleDateFormat.format(this.endTime));
+        if(this.endTime!=null)
+            job.put(JSON_OBJECT_ENDTIME_HOLDER, simpleDateFormat.format(this.endTime));
+        else
+            job.put(JSON_OBJECT_ENDTIME_HOLDER, "");
         return job;
     }
 
