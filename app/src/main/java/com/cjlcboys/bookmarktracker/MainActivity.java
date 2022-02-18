@@ -43,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Intent intent = getIntent();
+        if (intent.getType().equals("text/plain")) {
+            //start fragment here
+        }
     }
 
     @Override

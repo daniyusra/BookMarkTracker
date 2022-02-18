@@ -1,28 +1,28 @@
 package com.cjlcboys.bookmarktracker.bookmarkrecyclerview;
 
 import java.util.Date;
-
+import java.util.UUID;
 public class Bookmark {
-    public final int id;
+    public String id;
     private String title;
     private String url;
     private String desc;
     private Date uploadTime;
-    private Date timeRemaining; //how to implement?
-    private static int counter = 0;
+    private Date endTime; //how to implement?
+//    private static int counter = 0;
 
     //public final int objectId;
 
 
     public Bookmark(String title, String url, String desc){
-        this.id = counter++;
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.url = url;
         this.desc = desc;
     }
 
     public Bookmark(String title, String url){
-        this.id = counter++;
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.url = url;
         this.desc = "";
