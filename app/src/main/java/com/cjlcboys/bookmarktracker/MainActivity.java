@@ -28,7 +28,12 @@ import com.cjlcboys.bookmarktracker.Helper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +48,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -194,17 +201,33 @@ public class MainActivity extends AppCompatActivity {
         EditText newbookmarkdesc = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_description);
         Button newbookmarkbutton = (Button) makeNewBookmarkView.findViewById(R.id.button_create_bookmark);
         Button newbookmarkcancel = (Button)  makeNewBookmarkView.findViewById(R.id.button_exit);
+        ImageButton setdatetime = (ImageButton) makeNewBookmarkView.findViewById(R.id.imageButton2);
+        TextView newdatetime = (TextView) makeNewBookmarkView.findViewById(R.id.textViewDate);
+        CheckBox checkboxreminder = (CheckBox) makeNewBookmarkView.findViewById(R.id.CheckBoxReminder);
+
+        newdatetime.setText(Calendar.getInstance().getTime().toString());
 
         newbookmarktitle.setText(title);
         newbookmarkurl.setText(url);
         dialog.show();
+
+
+
 
         newbookmarkbutton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //      .setAction("Action", null).show();
-                bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),new Date(),new Date()));
+
+                if (checkboxreminder.isChecked()){
+                    bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),Calendar.getInstance().getTime(), new Date((String) newdatetime.getText())));
+                } else {
+                    bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),Calendar.getInstance().getTime(),new Date()));
+                }
+
+
+
                 dialog.dismiss();
                 if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                     Log.i("LOG","External Storage is loaded");
@@ -220,6 +243,33 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
                 }
+            }
+        });
+
+        setdatetime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                final View dialogView = View.inflate(MainActivity.this, R.layout.date_time_picker, null);
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+                dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                        TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+
+                        Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                                datePicker.getMonth(),
+                                datePicker.getDayOfMonth(),
+                                timePicker.getCurrentHour(),
+                                timePicker.getCurrentMinute());
+
+                        newdatetime.setText(calendar.getTime().toString());
+                        alertDialog.dismiss();
+                    }});
+                alertDialog.setView(dialogView);
+                alertDialog.show();
             }
         });
 
