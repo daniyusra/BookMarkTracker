@@ -34,8 +34,8 @@ public class FirstFragment extends Fragment {
 
         List<Bookmark> bookmarks = new ArrayList<>();
 
-        bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
-        bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
+        //bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
+        //bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
 
         BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
         // Attach the adapter to the recyclerview to populate items

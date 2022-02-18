@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.cjlcboys.bookmarktracker.bookmarkrecyclerview.Bookmark;
 import com.cjlcboys.bookmarktracker.bookmarkrecyclerview.BookmarksAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +18,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private List<Bookmark> bookmarks;
+    private RecyclerView rvBookmarks;
+    public BookmarksAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,67 +74,28 @@ public class MainActivity extends AppCompatActivity {
                 createDialog();
             }
 
-            public void createDialog(){
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                final View makeNewBookmarkView  = getLayoutInflater().inflate(R.layout.make_bookmark,null);
-                //bind to individual GUI objects
-                dialogBuilder.setView(makeNewBookmarkView);
-                AlertDialog dialog = dialogBuilder.create();
-                EditText newbookmarktitle = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_title);
-                EditText newbookmarkurl = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_url);
-                EditText newbookmarkdesc = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_description);
-                Button newbookmarkbutton = (Button) makeNewBookmarkView.findViewById(R.id.button_create_bookmark);
-                Button newbookmarkcancel = (Button)  makeNewBookmarkView.findViewById(R.id.button_exit);
-                dialog.show();
-
-                newbookmarkbutton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //      .setAction("Action", null).show();
-                        bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),new Date(),new Date()));
-                        dialog.dismiss();
-                        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                            Log.i("LOG","External Storage is loaded");
-                            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
-                            try {
-                                Helper.save_bookmarks(bookmarks,file);
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
-                                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be saved");
-                            }
-                        }
-                        else{
-                            Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
-                        }
-                    }
-                });
-
-                newbookmarkcancel.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //      .setAction("Action", null).show();
-                        //bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString()));
-                        dialog.dismiss();
-                    }
-                });
-            }
         });
 
         Intent intent = getIntent();
+
+        if (intent.getExtras() != null){
+            if (intent.getType().equals("text/plain")) {
+            //start fragment here
+                createDialog("",intent.getStringExtra(Intent.EXTRA_TEXT));
+            }
+        }
 
         //if (intent.getType().equals("text/plain")) {
             //start fragment here
         //}
 
-        RecyclerView rvBookmarks = (RecyclerView) binding.rvBookmarks;
+        rvBookmarks = (RecyclerView) binding.rvBookmarks;
 
         bookmarks = new ArrayList<>();
 
-        BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
+        adapter = new BookmarksAdapter(bookmarks);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvBookmarks);
         //Checking the availability state of the External Storage.
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Log.i("LOG","External Storage is loaded");
@@ -196,5 +161,76 @@ public class MainActivity extends AppCompatActivity {
         else{
             Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
         }
+    }
+
+    public void createDialog(){
+        createDialog("","");
+    }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            bookmarks.remove(viewHolder.getAdapterPosition());
+            adapter.notifyDataSetChanged();
+        }
+    };
+
+
+    public void createDialog(String title, String url){
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        final View makeNewBookmarkView  = getLayoutInflater().inflate(R.layout.make_bookmark,null);
+        //bind to individual GUI objects
+        dialogBuilder.setView(makeNewBookmarkView);
+        AlertDialog dialog = dialogBuilder.create();
+        EditText newbookmarktitle = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_title);
+        EditText newbookmarkurl = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_url);
+        EditText newbookmarkdesc = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_description);
+        Button newbookmarkbutton = (Button) makeNewBookmarkView.findViewById(R.id.button_create_bookmark);
+        Button newbookmarkcancel = (Button)  makeNewBookmarkView.findViewById(R.id.button_exit);
+
+        newbookmarktitle.setText(title);
+        newbookmarkurl.setText(url);
+        dialog.show();
+
+        newbookmarkbutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //      .setAction("Action", null).show();
+                bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),new Date(),new Date()));
+                dialog.dismiss();
+                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                    Log.i("LOG","External Storage is loaded");
+                    File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+                    try {
+                        Helper.save_bookmarks(bookmarks,file);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("LOG","No file found/Error parsing file. Bookmarks will not be saved");
+                    }
+                }
+                else{
+                    Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
+                }
+            }
+        });
+
+        newbookmarkcancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //      .setAction("Action", null).show();
+                //bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString()));
+                dialog.dismiss();
+            }
+        });
     }
 }
