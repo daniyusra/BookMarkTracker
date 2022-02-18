@@ -9,6 +9,8 @@ import com.cjlcboys.bookmarktracker.bookmarkrecyclerview.BookmarksAdapter;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -19,12 +21,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cjlcboys.bookmarktracker.databinding.ActivityMainBinding;
+import com.cjlcboys.bookmarktracker.Helper;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -76,6 +91,20 @@ public class MainActivity extends AppCompatActivity {
                         //      .setAction("Action", null).show();
                         bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),new Date(),new Date()));
                         dialog.dismiss();
+                        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                            Log.i("LOG","External Storage is loaded");
+                            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+                            try {
+                                Helper.save_bookmarks(bookmarks,file);
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be saved");
+                            }
+                        }
+                        else{
+                            Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
+                        }
                     }
                 });
 
@@ -101,13 +130,23 @@ public class MainActivity extends AppCompatActivity {
 
         bookmarks = new ArrayList<>();
 
-        bookmarks.add(new Bookmark("BRUH","BRUH.COM",new Date(),new Date()));
-        bookmarks.add(new Bookmark("BRUH2","BRUH.COM",new Date(),new Date()));
-
         BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
-        // Attach the adapter to the recyclerview to populate items
+        //Checking the availability state of the External Storage.
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            Log.i("LOG","External Storage is loaded");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+            try {
+                Helper.load_bookmarks(bookmarks,file);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be loaded");
+            }
+        }
+        else{
+            Log.i("LOG","External Storage is not loaded. Bookmarks will not be loaded");
+        }
         rvBookmarks.setAdapter(adapter);
-        // Set layout manager to position the items
         rvBookmarks.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -138,5 +177,24 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            Log.i("LOG","External Storage is loaded");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+            try {
+                Helper.save_bookmarks(bookmarks,file);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be saved");
+            }
+        }
+        else{
+            Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
+        }
     }
 }
