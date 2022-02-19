@@ -197,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             bookmarks.remove(viewHolder.getAdapterPosition());
+            adapter.getmBookmarks().clear();
+            adapter.notifyDataSetChanged();
+            adapter.getmBookmarks().addAll(bookmarks);
             adapter.notifyDataSetChanged();
         }
 
