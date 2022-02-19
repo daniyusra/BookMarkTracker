@@ -12,12 +12,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 public class Helper{
     public static final String BOOKMARKS_FILE_NAME="com.cjlcboys.bookmarktracker.bookmarks.json";
 
-    public static void load_bookmarks(List<Bookmark> bookmarks, File file) throws IOException, JSONException, ParseException {
+    public static void load_bookmarks(List<Bookmark> bookmarks, File file, boolean remove_past) throws IOException, JSONException, ParseException {
         BufferedReader reader = null;
         reader = new BufferedReader(new FileReader(file));
         StringBuilder stringBuilder = new StringBuilder();
@@ -31,8 +32,13 @@ public class Helper{
         reader.close();
         String content = stringBuilder.toString();
         JSONArray bkmrksarray = new JSONArray(content);
+        Calendar cal = Calendar.getInstance();
         for(int i=0;i<bkmrksarray.length();i++){
-            bookmarks.add(new Bookmark(bkmrksarray.getJSONObject(i)));
+            Bookmark bmark = new Bookmark(bkmrksarray.getJSONObject(i));
+            if(cal.getTime().getTime()>bmark.getEndTime().getTime() && remove_past){
+                bmark.setEndTime(null);
+            }
+            bookmarks.add(bmark);
         }
     }
 

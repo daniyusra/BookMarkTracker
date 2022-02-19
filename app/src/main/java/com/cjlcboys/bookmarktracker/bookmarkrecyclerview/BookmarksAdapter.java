@@ -54,6 +54,10 @@ public class BookmarksAdapter  extends
                 }
             });
         }
+
+        public void setState(Bookmark bookmark) {
+            this.mState = bookmark;
+        }
     }
 
 
@@ -92,6 +96,7 @@ public class BookmarksAdapter  extends
         textView2.setText(bookmark.getUrl());
         Button button = holder.editButton;
         button.setText("EDIT");
+        holder.setState(bookmark);
         //button.setText(contact.isOnline() ? "Message" : "Offline");
         //button.setEnabled(contact.isOnline());
 
