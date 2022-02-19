@@ -20,7 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/theblue"
+            android:background="@color/lightblue"
             app:popupTheme="@style/Theme.BookMarkTracker.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

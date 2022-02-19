@@ -10,20 +10,18 @@
     android:paddingBottom="2dp">
 
 
-
-
-            <TextView
-                android:id="@+id/bookmark_title"
-                android:layout_width="327dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="TestData"
-                android:textAppearance="@style/HeaderTxt"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/bookmark_title"
+        android:layout_width="327dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="TestData"
+        android:textAppearance="@style/HeaderTxt"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/bookmark_url"
@@ -44,6 +42,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textSize="10sp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.95"
