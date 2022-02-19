@@ -2,11 +2,13 @@ package com.cjlcboys.bookmarktracker.timeservice;
 
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +33,7 @@ import com.cjlcboys.bookmarktracker.bookmarkrecyclerview.Bookmark;
 
 public class TimerService extends Service {
 
+    private static final String CHANNEL_ID = "cjlc_boys_channel_id";
     private List<Bookmark> mBookmarks;
 
     public static String str_receiver = "com.cjlcboys.bookmarktracker.timeservice.receive";
@@ -56,6 +59,7 @@ public class TimerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i("LOG","creating a service");
 
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -65,7 +69,7 @@ public class TimerService extends Service {
             Log.i("LOG","External Storage is loaded");
             File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
             try {
-                Helper.load_bookmarks(mBookmarks,file);
+                Helper.load_bookmarks(mBookmarks,file,true);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -90,7 +94,7 @@ public class TimerService extends Service {
                 @Override
                 public void run() {
                     calendar = Calendar.getInstance();
-                    simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     strDate = simpleDateFormat.format(calendar.getTime());
                     Log.e("strDate", strDate);
                     twoDatesBetweenTime();
@@ -111,21 +115,32 @@ public class TimerService extends Service {
 
         try {
             for(Bookmark bmark: mBookmarks) {
-                if (bmark.getEndTime()==null){
+                if (!bmark.isReminder()){
                     continue;
                 }
                 if (date_current.getTime()>bmark.getEndTime().getTime()){
+                    bmark.setReminder(false);
+                    Log.i("LOG","Pushing a reminder");
                     NotificationManager notificationManager = (NotificationManager)
                             getSystemService(NOTIFICATION_SERVICE);
                     Intent intent = new Intent(this, MainActivity.class);
                     PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-                    Notification n  = new Notification.Builder(this)
+                    Notification.Builder n  = new Notification.Builder(this)
                             .setContentTitle("Reminder! Time to check this out")
                             .setContentText(bmark.getTitle())
                             .setSmallIcon(android.R.drawable.ic_dialog_info)
                             .setContentIntent(pIntent)
-                            .setAutoCancel(true).build();
-                    notificationManager.notify(0, n);
+                            .setAutoCancel(true);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    {
+                        NotificationChannel channel = new NotificationChannel(
+                                CHANNEL_ID,
+                                "Atode",
+                                NotificationManager.IMPORTANCE_HIGH);
+                        notificationManager.createNotificationChannel(channel);
+                        n.setChannelId(CHANNEL_ID);
+                    }
+                    notificationManager.notify(0, n.build());
                 }
             }
         } catch (Exception e) {
@@ -139,7 +154,7 @@ public class TimerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e("Service finish","Finish");
+        Log.i("Service finish","Finish");
     }
 
 

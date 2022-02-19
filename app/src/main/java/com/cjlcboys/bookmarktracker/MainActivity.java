@@ -49,6 +49,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvBookmarks;
     public BookmarksAdapter adapter;
     private boolean startedService=false;
+//    private static final SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final Calendar calendar = Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("LOG","External Storage is loaded");
             File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
             try {
-                Helper.load_bookmarks(bookmarks,file);
+                Helper.load_bookmarks(bookmarks,file,true);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -222,15 +225,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //      .setAction("Action", null).show();
-
-                if (checkboxreminder.isChecked()){
-                    bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),Calendar.getInstance().getTime(), new Date((String) newdatetime.getText())));
-                } else {
-                    bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),newbookmarkurl.getText().toString(),newbookmarkdesc.getText().toString(),Calendar.getInstance().getTime(),new Date()));
-                }
-
-
-
+                bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),
+                        newbookmarkurl.getText().toString(),
+                        newbookmarkdesc.getText().toString(),
+                        calendar.getTime(),
+                        new Date((String) newdatetime.getText()),checkboxreminder.isChecked()));
+                adapter.notifyDataSetChanged();
                 dialog.dismiss();
                 if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                     Log.i("LOG","External Storage is loaded");
@@ -261,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
 
                         DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
                         TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
-
                         Calendar calendar = new GregorianCalendar(datePicker.getYear(),
                                 datePicker.getMonth(),
                                 datePicker.getDayOfMonth(),
@@ -294,11 +293,43 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(),TimerService.class);
             stopService(intent);
         }
+        if(bookmarks==null)
+            bookmarks = new ArrayList<>();
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            Log.i("LOG","External Storage is loaded loading on resume");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+            try {
+                Helper.load_bookmarks(bookmarks,file,true);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be loaded");
+            }
+        }
+        else{
+            Log.i("LOG","External Storage is not loaded. Bookmarks will not be loaded");
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            Log.i("LOG","External Storage is loaded saving on pause");
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
+            try {
+                Helper.save_bookmarks(bookmarks,file);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Log.i("LOG","No file found/Error parsing file. Bookmarks will not be saved");
+            }
+        }
+        else{
+            Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
+        }
+        Log.i("LOG","Starting service");
         Intent intent_service = new Intent(getApplicationContext(), TimerService.class);
         this.startedService = true;
         startService(intent_service);
