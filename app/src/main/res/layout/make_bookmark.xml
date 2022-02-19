@@ -106,16 +106,17 @@
 
     <TextView
         android:id="@+id/textViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="207dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="4dp"
         android:text="2000/09/27 11:05;13"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="@+id/CheckBoxReminder"
         app:layout_constraintTop_toBottomOf="@+id/CheckBoxReminder"
         app:srcCompat="@android:drawable/ic_menu_edit" />
