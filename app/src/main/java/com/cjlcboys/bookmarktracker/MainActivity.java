@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent.getExtras() != null){
             if (intent.getType().equals("text/plain")) {
             //start fragment here
-                createDialog("",intent.getStringExtra(Intent.EXTRA_TEXT));
+                createDialog(intent.getStringExtra(Intent.EXTRA_TITLE),intent.getStringExtra(Intent.EXTRA_TEXT));
             }
         }
 
@@ -125,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
         }
         rvBookmarks.setAdapter(adapter);
         rvBookmarks.setLayoutManager(new LinearLayoutManager(this));
+
+        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mActionBarToolbar);
+        getSupportActionBar().setTitle("Your Bookmarks");
     }
 
     @Override

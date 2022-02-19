@@ -3,122 +3,114 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/edit_text_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Title"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.374" />
-
-    <EditText
-        android:id="@+id/edit_text_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
-
-    <EditText
-        android:id="@+id/edit_text_url"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Url"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_title" />
+    android:layout_height="match_parent"
+    android:paddingTop = "20dp"
+    android:paddingBottom = "20dp">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
         android:text="@string/create_new_bookmark"
-        app:layout_constraintBottom_toTopOf="@+id/edit_text_title"
+        android:textColor="@color/theblue"
+        android:textSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
-        android:text="Cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.259"
-        app:layout_constraintStart_toEndOf="@+id/button_create_bookmark"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
+    <EditText
+        android:id="@+id/edit_text_url"
+        android:layout_width="239dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="Url"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/edit_text_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_title" />
 
-    <Button
-        android:id="@+id/button_create_bookmark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="104dp"
-        android:text="create"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reminder in"
-        app:layout_constraintBottom_toTopOf="@+id/button_create_bookmark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.303"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
-        app:layout_constraintVertical_bias="0.647" />
-
-    <CheckBox
-        android:id="@+id/CheckBoxReminder"
-        android:layout_width="208dp"
-        android:layout_height="44dp"
-        android:text="Set reminders"
+    <EditText
+        android:id="@+id/edit_text_title"
+        android:layout_width="237dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textViewDate"
-        android:layout_width="207dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="241dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="8dp"
         android:text="2000/09/27 11:05;13"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/edit_text_description"
+        android:layout_width="238dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/edit_text_url"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
+
+    <CheckBox
+        android:id="@+id/CheckBoxReminder"
+        android:layout_width="239dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="4dp"
+        android:text="Set reminders"
+        app:layout_constraintStart_toStartOf="@+id/edit_text_description"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
 
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="48dp"
         android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="@+id/CheckBoxReminder"
         app:layout_constraintEnd_toEndOf="@+id/CheckBoxReminder"
-        app:layout_constraintTop_toBottomOf="@+id/CheckBoxReminder"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
+        app:layout_constraintVertical_bias="0.357"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <Button
+        android:id="@+id/button_create_bookmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/theblue"
+        android:text="create"
+        app:layout_constraintStart_toStartOf="@+id/textViewDate"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Reminder in"
+        app:layout_constraintStart_toStartOf="@+id/CheckBoxReminder"
+        app:layout_constraintTop_toBottomOf="@+id/CheckBoxReminder" />
+
+    <Button
+        android:id="@+id/button_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/theblue"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="@+id/textViewDate"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
