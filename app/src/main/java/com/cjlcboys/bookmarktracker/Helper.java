@@ -35,9 +35,9 @@ public class Helper{
         Calendar cal = Calendar.getInstance();
         for(int i=0;i<bkmrksarray.length();i++){
             Bookmark bmark = new Bookmark(bkmrksarray.getJSONObject(i));
-            if(cal.getTime().getTime()>bmark.getEndTime().getTime() && remove_past){
-                bmark.setReminder(false);
-            }
+//            if(cal.getTime().getTime()>bmark.getEndTime().getTime() && remove_past){
+//                bmark.setReminder(false);
+//            }
             bookmarks.add(bmark);
         }
     }
