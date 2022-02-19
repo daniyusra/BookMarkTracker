@@ -1,8 +1,7 @@
 package com.cjlcboys.bookmarktracker.bookmarkrecyclerview;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cjlcboys.bookmarktracker.MainActivity;
 import com.cjlcboys.bookmarktracker.R;
 
 import java.util.List;
@@ -20,7 +18,11 @@ import java.util.List;
 public class BookmarksAdapter  extends
         RecyclerView.Adapter<BookmarksAdapter.ViewHolder>{
 
-    private ClickListener clickListener;
+    private static ClickListener clickListener;
+
+    public void setOnClickListener(ClickListener clickListener) {
+        BookmarksAdapter.clickListener = clickListener;
+    }
 
 
     public interface ClickListener {
@@ -48,14 +50,13 @@ public class BookmarksAdapter  extends
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickListener.onItemClick(mState, v);
-
+                    BookmarksAdapter.clickListener.onItemClick(mState, v);
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    clickListener.onItemLongClick(mState, v);
+                    BookmarksAdapter.clickListener.onItemLongClick(mState, v);
                     return false;
                 }
             });
@@ -71,9 +72,8 @@ public class BookmarksAdapter  extends
     private List<Bookmark> mBookmarks;
 
     // Pass in the contact array into the constructor
-    public BookmarksAdapter(List<Bookmark> bookmarks, ClickListener clickListener) {
+    public BookmarksAdapter(List<Bookmark> bookmarks) {
         mBookmarks = bookmarks;
-         this.clickListener = clickListener;
     }
 
     @NonNull
@@ -101,15 +101,12 @@ public class BookmarksAdapter  extends
         TextView textView2 = holder.bookmarkUrlView;
         textView2.setText(bookmark.getUrl());
         Button button = holder.editButton;
-        button.setText("EDIT");
         holder.setState(bookmark);
-
 
         //button.setText(contact.isOnline() ? "Message" : "Offline");
         //button.setEnabled(contact.isOnline());
 
     }
-
     @Override
     public int getItemCount() {
         return mBookmarks.size();

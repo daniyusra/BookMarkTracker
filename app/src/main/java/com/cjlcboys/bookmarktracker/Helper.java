@@ -36,7 +36,7 @@ public class Helper{
         for(int i=0;i<bkmrksarray.length();i++){
             Bookmark bmark = new Bookmark(bkmrksarray.getJSONObject(i));
             if(cal.getTime().getTime()>bmark.getEndTime().getTime() && remove_past){
-                bmark.setEndTime(null);
+                bmark.setReminder(false);
             }
             bookmarks.add(bmark);
         }

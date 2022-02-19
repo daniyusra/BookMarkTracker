@@ -40,12 +40,6 @@ public class TimerService extends Service {
 
     private Handler mHandler = new Handler();
     Calendar calendar;
-    SimpleDateFormat simpleDateFormat;
-    String strDate;
-    Date date_current;
-    SharedPreferences mpref;
-    SharedPreferences.Editor mEditor;
-
     private Timer mTimer = null;
     public static final long NOTIFY_INTERVAL = 10000;
     Intent intent;
@@ -62,8 +56,6 @@ public class TimerService extends Service {
         Log.i("LOG","creating a service");
 
         calendar = Calendar.getInstance();
-        simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-
         mBookmarks = new ArrayList<>();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Log.i("LOG","External Storage is loaded");
@@ -94,9 +86,6 @@ public class TimerService extends Service {
                 @Override
                 public void run() {
                     calendar = Calendar.getInstance();
-                    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                    strDate = simpleDateFormat.format(calendar.getTime());
-                    Log.e("strDate", strDate);
                     twoDatesBetweenTime();
                 }
 
@@ -106,19 +95,12 @@ public class TimerService extends Service {
     }
 
     public void twoDatesBetweenTime() {
-
-        try {
-            date_current = simpleDateFormat.parse(strDate);
-        } catch (Exception e) {
-            Log.i("LOG","Error parsing dateime at TimerService");
-        }
-
         try {
             for(Bookmark bmark: mBookmarks) {
                 if (!bmark.isReminder()){
                     continue;
                 }
-                if (date_current.getTime()>bmark.getEndTime().getTime()){
+                if (calendar.getTime().getTime()>bmark.getEndTime().getTime()){
                     bmark.setReminder(false);
                     Log.i("LOG","Pushing a reminder");
                     NotificationManager notificationManager = (NotificationManager)

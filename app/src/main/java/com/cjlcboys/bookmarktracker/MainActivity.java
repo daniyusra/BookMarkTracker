@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cjlcboys.bookmarktracker.databinding.ActivityMainBinding;
-import com.cjlcboys.bookmarktracker.Helper;
 import com.cjlcboys.bookmarktracker.timeservice.TimerService;
 
 import android.view.Menu;
@@ -34,24 +33,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
@@ -91,15 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        Intent intent = getIntent();
-
-        if (intent.getExtras() != null){
-            if (intent.getType().equals("text/plain")) {
-            //start fragment here
-                createDialog(intent.getStringExtra(Intent.EXTRA_TITLE),intent.getStringExtra(Intent.EXTRA_TEXT),"");
-            }
-        }
-
         //if (intent.getType().equals("text/plain")) {
             //start fragment here
         //}
@@ -108,7 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
         bookmarks = new ArrayList<>();
 
-        adapter = new BookmarksAdapter(bookmarks,new BookmarksAdapter.ClickListener() {
+        adapter = new BookmarksAdapter(bookmarks);
+
+        adapter.setOnClickListener(new BookmarksAdapter.ClickListener() {
             @Override
             public void onItemClick(Bookmark state, View v) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
@@ -147,6 +126,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setTitle("Your Bookmarks");
+
+        Intent intent = getIntent();
+        if (intent.getExtras() != null){
+            if (intent.getType().equals("text/plain")) {
+                createDialog(intent.getStringExtra(Intent.EXTRA_TITLE),intent.getStringExtra(Intent.EXTRA_TEXT),"");
+                rvBookmarks.postInvalidate();
+            }
+        }
     }
 
     @Override
@@ -199,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createDialog(){
         createDialog("","","");
+        adapter.notifyDataSetChanged();
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
@@ -218,11 +206,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Bookmark existBmark = null;
+    private boolean passedUUID = false;
 
     public void createDialog(String title, String url,String uuid){
-        for(Bookmark b: bookmarks){
-            if(b.getID().equals(uuid))
-                existBmark=b;
+        if(!uuid.equals("")) {
+            for (Bookmark b : bookmarks) {
+                if (b.getID().equals(uuid)) {
+                    existBmark = b;
+                    passedUUID =true;
+                }
+            }
         }
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -235,15 +228,14 @@ public class MainActivity extends AppCompatActivity {
         EditText newbookmarkdesc = (EditText) makeNewBookmarkView.findViewById(R.id.edit_text_description);
         Button newbookmarkbutton = (Button) makeNewBookmarkView.findViewById(R.id.button_create_bookmark);
         Button newbookmarkcancel = (Button)  makeNewBookmarkView.findViewById(R.id.button_exit);
-        ImageButton setdatetime = (ImageButton) makeNewBookmarkView.findViewById(R.id.imageButton2);
         TextView newdatetime = (TextView) makeNewBookmarkView.findViewById(R.id.textViewDate);
         CheckBox checkboxreminder = (CheckBox) makeNewBookmarkView.findViewById(R.id.CheckBoxReminder);
 
-        if (existBmark!=null){
-            newdatetime.setText(existBmark.getEndTime().toString());
+        if (passedUUID&&(!uuid.equals(""))){
             newbookmarktitle.setText(existBmark.getTitle());
             newbookmarkurl.setText(existBmark.getUrl());
             newbookmarkdesc.setText(existBmark.getDesc());
+            newdatetime.setText(existBmark.getEndTime().toString());
             newbookmarkbutton.setText("Save");
             checkboxreminder.setChecked(existBmark.getReminder());
         }
@@ -259,7 +251,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //      .setAction("Action", null).show();
-                if(existBmark==null) {
+                if(!passedUUID) {
+                    Log.i("LOG","Adding a new entry");
                     bookmarks.add(new Bookmark(newbookmarktitle.getText().toString(),
                             newbookmarkurl.getText().toString(),
                             newbookmarkdesc.getText().toString(),
@@ -272,9 +265,8 @@ public class MainActivity extends AppCompatActivity {
                     existBmark.setDesc(newbookmarkdesc.getText().toString());
                     existBmark.setEndTime(new Date((String) newdatetime.getText()));
                     existBmark.setReminder(checkboxreminder.isChecked());
-                    existBmark=null;
+                    passedUUID=false;
                 }
-                adapter.notifyDataSetChanged();
                 dialog.dismiss();
                 if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                     Log.i("LOG","External Storage is loaded");
@@ -290,9 +282,10 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
                 }
+                adapter.notifyDataSetChanged();
             }
         });
-        setdatetime.setOnClickListener(new View.OnClickListener(){
+        newdatetime.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 final View dialogView = View.inflate(MainActivity.this, R.layout.date_time_picker, null);
@@ -336,8 +329,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(),TimerService.class);
             stopService(intent);
         }
-        if(bookmarks==null)
-            bookmarks = new ArrayList<>();
+        bookmarks = new ArrayList<>();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Log.i("LOG","External Storage is loaded loading on resume");
             File file = new File(getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS), Helper.BOOKMARKS_FILE_NAME);
@@ -352,6 +344,8 @@ public class MainActivity extends AppCompatActivity {
         else{
             Log.i("LOG","External Storage is not loaded. Bookmarks will not be loaded");
         }
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override
