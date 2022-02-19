@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cjlcboys.bookmarktracker.MainActivity;
 import com.cjlcboys.bookmarktracker.R;
 
 import java.util.List;
@@ -19,9 +20,15 @@ import java.util.List;
 public class BookmarksAdapter  extends
         RecyclerView.Adapter<BookmarksAdapter.ViewHolder>{
 
-    private Context applicationContext;
+    private ClickListener clickListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+    public interface ClickListener {
+        void onItemClick(Bookmark state, View v);
+        void onItemLongClick(Bookmark state, View v);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView bookmarkTextView;
@@ -34,7 +41,6 @@ public class BookmarksAdapter  extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
             bookmarkTextView= (TextView) itemView.findViewById(R.id.bookmark_title);
             bookmarkUrlView = (TextView) itemView.findViewById(R.id.bookmark_url);
             editButton = (Button) itemView.findViewById(R.id.edit_button);
@@ -42,15 +48,15 @@ public class BookmarksAdapter  extends
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(mState.getUrl()));
-                    applicationContext.startActivity(i);
+                    clickListener.onItemClick(mState, v);
+
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return true;
+                    clickListener.onItemLongClick(mState, v);
+                    return false;
                 }
             });
         }
@@ -65,9 +71,9 @@ public class BookmarksAdapter  extends
     private List<Bookmark> mBookmarks;
 
     // Pass in the contact array into the constructor
-    public BookmarksAdapter(List<Bookmark> bookmarks, Context applicationContext) {
+    public BookmarksAdapter(List<Bookmark> bookmarks, ClickListener clickListener) {
         mBookmarks = bookmarks;
-        this.applicationContext = applicationContext;
+         this.clickListener = clickListener;
     }
 
     @NonNull
@@ -97,6 +103,8 @@ public class BookmarksAdapter  extends
         Button button = holder.editButton;
         button.setText("EDIT");
         holder.setState(bookmark);
+
+
         //button.setText(contact.isOnline() ? "Message" : "Offline");
         //button.setEnabled(contact.isOnline());
 

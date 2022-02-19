@@ -27,22 +27,22 @@ public class FirstFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
-
-        RecyclerView rvBookmarks = (RecyclerView) binding.rvBookmarks;
-
-        List<Bookmark> bookmarks = new ArrayList<>();
-
-        //bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
-        //bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
-
-        BookmarksAdapter adapter = new BookmarksAdapter(bookmarks, getActivity());
-        // Attach the adapter to the recyclerview to populate items
-        rvBookmarks.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvBookmarks.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return binding.getRoot();
+        return null;
+//        binding = FragmentFirstBinding.inflate(inflater, container, false);
+//
+//        RecyclerView rvBookmarks = (RecyclerView) binding.rvBookmarks;
+//
+//        List<Bookmark> bookmarks = new ArrayList<>();
+//
+//        //bookmarks.add(new Bookmark("BRUH","BRUH.COM","BRUHHHH"));
+//        //bookmarks.add(new Bookmark("BRUH2","BRUH.COM","BRUHHHH"));
+//
+//        BookmarksAdapter adapter = new BookmarksAdapter(bookmarks);
+//        // Attach the adapter to the recyclerview to populate items
+//        rvBookmarks.setAdapter(adapter);
+//        // Set layout manager to position the items
+//        rvBookmarks.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        return binding.getRoot();
 
     }
 

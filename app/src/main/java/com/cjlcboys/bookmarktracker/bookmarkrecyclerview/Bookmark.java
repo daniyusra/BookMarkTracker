@@ -95,7 +95,9 @@ public class Bookmark {
     }
 
     //GETTERS
-
+    public String getID() {
+        return this.id;
+    }
     public String getTitle(){
         return this.title;
     }
@@ -145,4 +147,7 @@ public class Bookmark {
     }
 
 
+    public boolean getReminder() {
+        return this.reminder;
+    }
 }
