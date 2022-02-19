@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //      .setAction("Action", null).show();
                 createDialog();
             }
 
@@ -282,6 +280,9 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Log.i("LOG","External Storage is not loaded. Bookmarks will not be saved");
                 }
+                adapter.getmBookmarks().clear();
+                adapter.notifyDataSetChanged();
+                adapter.getmBookmarks().addAll(bookmarks);
                 adapter.notifyDataSetChanged();
             }
         });

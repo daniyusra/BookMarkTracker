@@ -76,6 +76,10 @@ public class BookmarksAdapter  extends
         mBookmarks = bookmarks;
     }
 
+    public List<Bookmark> getmBookmarks(){
+        return  mBookmarks;
+    }
+
     @NonNull
     @Override
     public BookmarksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
