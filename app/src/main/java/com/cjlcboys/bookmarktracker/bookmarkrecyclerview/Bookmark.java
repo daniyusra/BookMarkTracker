@@ -92,6 +92,7 @@ public class Bookmark {
             String tmp_date = job.getString(JSON_OBJECT_ENDTIME_HOLDER);
             this.endTime = simpleDateFormat.parse(tmp_date);
         }
+        Log.i("LOG","UUID: "+this.id+" title: "+this.title);
     }
 
     //GETTERS

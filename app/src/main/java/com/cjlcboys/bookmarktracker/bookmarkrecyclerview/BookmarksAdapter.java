@@ -94,13 +94,13 @@ public class BookmarksAdapter  extends
     public void onBindViewHolder(@NonNull BookmarksAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
         Bookmark bookmark = mBookmarks.get(position);
-
+        Log.i("LOG","pos: "+position+"title: "+bookmark.getTitle());
         // Set item views based on your views and data model
         TextView textView1 = holder.bookmarkTextView;
         textView1.setText(bookmark.getTitle());
         TextView textView2 = holder.bookmarkUrlView;
         textView2.setText(bookmark.getUrl());
-        Button button = holder.editButton;
+
         holder.setState(bookmark);
 
         //button.setText(contact.isOnline() ? "Message" : "Offline");

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvBookmarks;
     public BookmarksAdapter adapter;
     private boolean startedService=false;
-//    private static final SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    //    private static final SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static final Calendar calendar = Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                  //      .setAction("Action", null).show();
+                //      .setAction("Action", null).show();
                 createDialog();
             }
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //if (intent.getType().equals("text/plain")) {
-            //start fragment here
+        //start fragment here
         //}
 
         rvBookmarks = (RecyclerView) binding.rvBookmarks;
